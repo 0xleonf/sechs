@@ -12,6 +12,37 @@ struct Utils {
     return total;
   }
 
+  int identify_last_digit(char *argv[]) {
+    int number;
+    if ((int)argv[1][10] % 2 != 0) {
+      number = 1;
+    } else {
+      number = 0;
+    }
+    return number;
+  }
+
+  // converts 3 digit from char to int (dynamic allocation)
+  int convert_digit(char *argv[]) {
+    // base ascii 0
+    int base = 48;
+    int last_digit[3] = {(int)argv[1][8], (int)argv[1][9], (int)argv[1][10]};
+
+    int size = sizeof(last_digit) / sizeof(last_digit[0]);
+    int *arr = (int *)malloc(size * sizeof(int));
+
+    if (arr != NULL) {
+      for (int i = 0; i < size; i++) {
+        arr[i] = (last_digit[i] - base);
+      }
+    }
+
+    int sum = ((arr[0] * 100) + (arr[1] * 10) + (arr[2]) * 1);
+
+    free(arr);
+    return sum;
+  }
+
   void press() {
     cout << "Press Enter to next...";
     std::cin.clear();
@@ -82,6 +113,21 @@ struct Error {
   }
 };
 
+struct Memory {
+  int curr_offset;
+  int pool_size;
+  int special_gap;
+  int byte;
+
+  Utils *utils;
+  void add_memory(int &byte) {
+    int aligned_pos = curr_offset;
+    if (aligned_pos % byte != 0) {
+      aligned_pos = aligned_pos + (byte - (aligned_pos % byte));
+    }
+  }
+};
+
 int main(int argc, char *argv[]) {
   Utils *util;
   Error *error;
@@ -96,6 +142,7 @@ int main(int argc, char *argv[]) {
   error->many_args(size);
   error->less_args(size);
   error->not_prefix(argv);
+
   // free(error);
   // free(util);
 
@@ -110,36 +157,38 @@ int main(int argc, char *argv[]) {
   util->press();
   util->clear_screen();
 
-  do {
-    std::cout << R"(
-    ------------------------------------------------------------
-      Menu
-    ------------------------------------------------------------
-        1 - Show Historia's memories
-        2 - Show Mira's memories
-        3 - Show Victoria's memories
-        4 - Add memory to a sister
-        5 - Delete memory by index from a sister
-        6 - Print sisters' pool diagnostics
-        0 - Exit
-    ------------------------------------------------------------
-            )";
-    std::cout << "Choose: ";
-    std::cin >> option;
+  cout << util->convert_digit(argv);
 
-    if (std::cin.fail()) {
-      error->input_failed(util);
-      option = -1;
-      continue;
-    }
-
-    switch (option) {
-    case 1:
-      cout << "halo";
-      break;
-    }
-
-  } while (option != 0);
+  // do {
+  //   std::cout << R"(
+  //   ------------------------------------------------------------
+  //     Menu
+  //   ------------------------------------------------------------
+  //       1 - Show Historia's memories
+  //       2 - Show Mira's memories
+  //       3 - Show Victoria's memories
+  //       4 - Add memory to a sister
+  //       5 - Delete memory by index from a sister
+  //       6 - Print sisters' pool diagnostics
+  //       0 - Exit
+  //   ------------------------------------------------------------
+  //           )";
+  //   std::cout << "Choose: ";
+  //   std::cin >> option;
+  //
+  //   if (std::cin.fail()) {
+  //     error->input_failed(util);
+  //     option = -1;
+  //     continue;
+  //   }
+  //
+  //   switch (option) {
+  //   case 1:
+  //     cout << "halo";
+  //     break;
+  //   }
+  //
+  // } while (option != 0);
 
   return 0;
 }
