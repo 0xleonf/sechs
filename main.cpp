@@ -304,6 +304,22 @@ struct Sister {
     free(util);
   }
 
+  void delete_memory(int index) {
+    if (index >= this->memory_count || index < 0) {
+      cout << "Invalid choose, index out of range!";
+      exit(1);
+    }
+
+    if (index == this->memory_count - 1) {
+      this->bump = this->memories[index].offset;
+      this->memory_count--;
+      cout << "Tail reclaimed, new Bump: " << this->bump << "\n";
+    } else {
+      this->memory_count--;
+      cout << "Fragmentation prevents reclaim. Delete higher indices first!\n";
+    }
+  }
+
   // void display_sister(const char *string) {
   //   int count = 1;
   //
@@ -369,12 +385,16 @@ int main(int argc, char *argv[]) {
   util->clear_screen();
 
   historia->init();
-  cout << historia->bump;
   historia->add_memory("char*", "Halo", "Historia", argv);
-  // historia->add_memory("char*", "Halo", "Historia", argv);
-  historia->add_memory("uint", "33", "Historia", argv);
+  historia->add_memory("char*", "Halo", "Historia", argv);
   historia->display_sister("Historia");
+
+  // mira->init();
+  // mira->add_memory("char*", "Mira: The winds are changing.", "Mira", argv);
+  // mira->display_sister("Mira");
   cout << "\n";
+
+  historia->delete_memory(0);
 
   // cout << historia[0].memories[0]
 
