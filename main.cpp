@@ -320,6 +320,28 @@ struct Sister {
     }
   }
 
+  void diagnostics(const char *string) {
+    int used_bytes = 0;
+    for (int i = 0; i < this->memory_count; i++) {
+      used_bytes += this->memories[i].size;
+    }
+
+    double utilize = ((double)used_bytes / (double)this->pool_size) * 100;
+
+    cout << "------------------------------------------------------------\n";
+    cout << "Diagnostics for " << string << "\n";
+    cout << "------------------------------------------------------------\n";
+    cout << "Pool: " << (void *)this;
+    cout << " | Size: " << this->pool_size;
+    cout << " | Bump: " << this->bump;
+    cout << " | Align: " << this->alignment;
+    cout << " + Gap " << this->special_gap << "\n";
+    cout << "Entries: " << this->memory_count << "\n";
+    cout << "Used Slots: " << this->memory_count;
+    cout << " | Used Bytes: " << used_bytes << "\n";
+    cout << "Utilization: " << utilize << "%\n";
+  }
+
   // void display_sister(const char *string) {
   //   int count = 1;
   //
@@ -389,12 +411,14 @@ int main(int argc, char *argv[]) {
   historia->add_memory("char*", "Halo", "Historia", argv);
   historia->display_sister("Historia");
 
+  historia->diagnostics("Historia");
+
   // mira->init();
   // mira->add_memory("char*", "Mira: The winds are changing.", "Mira", argv);
   // mira->display_sister("Mira");
   cout << "\n";
 
-  historia->delete_memory(0);
+  // historia->delete_memory(0);
 
   // cout << historia[0].memories[0]
 
@@ -431,7 +455,6 @@ int main(int argc, char *argv[]) {
   //   switch (option) {
   //   case 1:
   //     char type[3][20];
-  //     util->strcopy(historia[0].name, "Historia");
   //     historia->memories->size = 32;
   //     historia->pool_size = 1024;
   //   }
